@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goal Tracker</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4caf50;
+            --danger-color: #f44336;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .goal-form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .goals-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .goal-list {
+            list-style-type: none;
+        }
+        
+        .goal-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .goal-item:last-child {
+            border-bottom: none;
+        }
+        
+        .goal-info {
+            flex: 1;
+        }
+        
+        .goal-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .goal-deadline {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .goal-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .completed {
+            text-decoration: line-through;
+            color: #888;
+        }
+        
+        .complete-checkbox {
+            margin-right: 10px;
+            transform: scale(1.5);
+            cursor: pointer;
+        }
+        
+        .delete-btn {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .delete-btn:hover {
+            background-color: #d32f2f;
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .time-filter {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .filter-btn {
+            background-color: white;
+            color: var(--dark-color);
+            border: 1px solid #ddd;
+            padding: 8px 15px;
+            margin: 0 5px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .example-goals {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .example-goal-btn {
+            background-color: #f1f3f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .example-goal-btn:hover {
+            background-color: #e0e4f0;
+            border-color: #bbc;
+        }
+        
+        .examples-heading {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #555;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .goal-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .goal-actions {
+                margin-top: 10px;
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .time-filter {
+                flex-wrap: wrap;
+            }
+            
+            .filter-btn {
+                margin-bottom: 5px;
+            }
+            
+            .example-goals {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Goal Tracker</h1>
+            <p>Track your goals and stay motivated</p>
+        </header>
+        
+        <div class="goal-form">
+            <h2>Add New Goal</h2>
+            <form id="new-goal-form">
+                <div class="form-group">
+                    <label for="goal-title">Goal Description</label>
+                    <input type="text" id="goal-title" placeholder="What do you want to achieve?" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="goal-deadline">Deadline</label>
+                    <input type="date" id="goal-deadline" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="goal-priority">Priority</label>
+                    <select id="goal-priority">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                
+                <button type="submit">Add Goal</button>
+                
+                <div class="examples-heading">Or quickly add an example goal:</div>
+                <div class="example-goals" id="example-goals">
+                    <button type="button" class="example-goal-btn" data-goal="Complete online course" data-days="14" data-priority="high">Complete online course</button>
+                    <button type="button" class="example-goal-btn" data-goal="Go to the gym 3 times" data-days="7" data-priority="medium">Weekly gym sessions</button>
+                    <button type="button" class="example-goal-btn" data-goal="Read 20 pages" data-days="1" data-priority="low">Daily reading</button>
+                    <button type="button" class="example-goal-btn" data-goal="Finish project presentation" data-days="3" data-priority="high">Project presentation</button>
+                    <button type="button" class="example-goal-btn" data-goal="Update resume" data-days="10" data-priority="medium">Update resume</button>
+                    <button type="button" class="example-goal-btn" data-goal="Plan weekend trip" data-days="5" data-priority="low">Plan weekend trip</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="time-filter">
+            <button class="filter-btn active" data-filter="all">All Goals</button>
+            <button class="filter-btn" data-filter="today">Today</button>
+            <button class="filter-btn" data-filter="week">This Week</button>
+            <button class="filter-btn" data-filter="month">This Month</button>
+        </div>
+        
+        <div class="goals-container">
+            <h2>Your Goals</h2>
+            <ul class="goal-list" id="goal-list">
+                <li class="empty-message">No goals added yet. Add some goals to get started!</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM elements
+            const goalForm = document.getElementById('new-goal-form');
+            const goalTitleInput = document.getElementById('goal-title');
+            const goalDeadlineInput = document.getElementById('goal-deadline');
+            const goalPriorityInput = document.getElementById('goal-priority');
+            const goalList = document.getElementById('goal-list');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const exampleGoalsContainer = document.getElementById('example-goals');
+            
+            // Load goals from local storage
+            let goals = JSON.parse(localStorage.getItem('goals')) || [];
+            let currentFilter = 'all';
+            
+            // Set default date for the deadline input (today)
+            const today = new Date();
+            const formattedDate = today.toISOString().substr(0, 10);
+            goalDeadlineInput.value = formattedDate;
+            
+            // Initialize the app
+            renderGoals();
+            
+            // Event listener for adding a new goal
+            goalForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const title = goalTitleInput.value.trim();
+                const deadline = goalDeadlineInput.value;
+                const priority = goalPriorityInput.value;
+                
+                if (title && deadline) {
+                    addNewGoal(title, deadline, priority);
+                    
+                    // Reset form
+                    goalForm.reset();
+                    goalDeadlineInput.value = formattedDate;
+                }
+            });
+            
+            // Event listener for example goals
+            exampleGoalsContainer.addEventListener('click', function(e) {
+                if (e.target.classList.contains('example-goal-btn')) {
+                    const goalTitle = e.target.dataset.goal;
+                    const daysToAdd = parseInt(e.target.dataset.days);
+                    const priority = e.target.dataset.priority;
+                    
+                    // Calculate deadline date
+                    const deadlineDate = new Date();
+                    deadlineDate.setDate(deadlineDate.getDate() + daysToAdd);
+                    const formattedDeadline = deadlineDate.toISOString().substr(0, 10);
+                    
+                    addNewGoal(goalTitle, formattedDeadline, priority);
+                }
+            });
+            
+            // Function to add a new goal
+            function addNewGoal(title, deadline, priority) {
+                const newGoal = {
+                    id: Date.now().toString(),
+                    title,
+                    deadline,
+                    priority,
+                    completed: false,
+                    createdAt: new Date().toISOString()
+                };
+                
+                goals.push(newGoal);
+                saveGoals();
+                renderGoals();
+            }
+            
+            // Event delegation for completing and deleting goals
+            goalList.addEventListener('click', function(e) {
+                const goalItem = e.target.closest('.goal-item');
+                if (!goalItem) return;
+                
+                const goalId = goalItem.dataset.id;
+                
+                // Handle checkbox click
+                if (e.target.classList.contains('complete-checkbox')) {
+                    toggleGoalCompletion(goalId);
+                }
+                
+                // Handle delete button click
+                if (e.target.classList.contains('delete-btn')) {
+                    deleteGoal(goalId);
+                }
+            });
+            
+            // Event listeners for filter buttons
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Update current filter
+                    currentFilter = this.dataset.filter;
+                    
+                    // Re-render goals with the new filter
+                    renderGoals();
+                });
+            });
+            
+            // Function to toggle goal completion status
+            function toggleGoalCompletion(goalId) {
+                const goalIndex = goals.findIndex(goal => goal.id === goalId);
+                
+                if (goalIndex !== -1) {
+                    goals[goalIndex].completed = !goals[goalIndex].completed;
+                    saveGoals();
+                    renderGoals();
+                }
+            }
+            
+            // Function to delete a goal
+            function deleteGoal(goalId) {
+                goals = goals.filter(goal => goal.id !== goalId);
+                saveGoals();
+                renderGoals();
+            }
+            
+            // Function to save goals to local storage
+            function saveGoals() {
+                localStorage.setItem('goals', JSON.stringify(goals));
+            }
+            
+            // Function to render goals based on current filter
+            function renderGoals() {
+                const filteredGoals = filterGoals(goals, currentFilter);
+                
+                if (filteredGoals.length === 0) {
+                    goalList.innerHTML = '<li class="empty-message">No goals found for this time period.</li>';
+                    return;
+                }
+                
+                goalList.innerHTML = '';
+                
+                filteredGoals.forEach(goal => {
+                    const goalElement = createGoalElement(goal);
+                    goalList.appendChild(goalElement);
+                });
+            }
+            
+            // Function to create a goal list item
+            function createGoalElement(goal) {
+                const li = document.createElement('li');
+                li.className = 'goal-item';
+                li.dataset.id = goal.id;
+                
+                const priorityColor = getPriorityColor(goal.priority);
+                
+                li.innerHTML = `
+                    <div class="goal-info ${goal.completed ? 'completed' : ''}">
+                        <div class="goal-title" style="border-left: 3px solid ${priorityColor}; padding-left: 10px;">
+                            ${goal.title}
+                        </div>
+                        <div class="goal-deadline">Due: ${formatDate(goal.deadline)}</div>
+                    </div>
+                    <div class="goal-actions">
+                        <input type="checkbox" class="complete-checkbox" ${goal.completed ? 'checked' : ''}>
+                        <button class="delete-btn">Delete</button>
+                    </div>
+                `;
+                
+                return li;
+            }
+            
+            // Function to filter goals based on time period
+            function filterGoals(goals, filter) {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                const endOfWeek = new Date(today);
+                endOfWeek.setDate(today.getDate() + (7 - today.getDay()));
+                
+                const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                
+                return goals.filter(goal => {
+                    const deadlineDate = new Date(goal.deadline);
+                    deadlineDate.setHours(0, 0, 0, 0);
+                    
+                    switch (filter) {
+                        case 'today':
+                            return deadlineDate.getTime() === today.getTime();
+                        case 'week':
+                            return deadlineDate >= today && deadlineDate <= endOfWeek;
+                        case 'month':
+                            return deadlineDate >= today && deadlineDate <= endOfMonth;
+                        default:
+                            return true; // 'all' filter
+                    }
+                });
+            }
+            
+            // Function to get color based on priority
+            function getPriorityColor(priority) {
+                switch (priority) {
+                    case 'high':
+                        return '#f44336';
+                    case 'medium':
+                        return '#ff9800';
+                    case 'low':
+                        return '#4caf50';
+                    default:
+                        return '#4361ee';
+                }
+            }
+            
+            // Function to format date for display
+            function formatDate(dateString) {
+                const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                return new Date(dateString).toLocaleDateString(undefined, options);
+            }
+        });
+    </script>
+</body>
+</html>
